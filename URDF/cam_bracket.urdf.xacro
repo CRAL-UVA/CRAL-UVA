@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+   <!-- Link for the top assembly plate mesh -->
+  <link name="cam_bracket_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://uva28_description/meshes/zed2_cam_bracket.STL"/>
+      </geometry>
+	<material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://uva28_description/meshes/zed2_cam_bracket.STL"/>
+     </geometry>
+    </collision>
+  </link>
+
+  <joint name="jcam_bracket_joint" type="fixed">
+    <parent link="zed_lock_mount"/>
+    <child link="cam_bracket_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 -1.5708 0" />
+  </joint>
+  
+  <!-- Link for cam mount point -->
+
+  <link name="cam_bracket_mount">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </link>
+
+  <joint name="cam_bracket_mount_joint" type="fixed">
+    <parent link="cam_bracket_link" />
+    <child link="cam_bracket_mount" />
+    <origin xyz="0.018 0 0.018" rpy="0 0 0"/>
+  </joint>
+
+ </robot>
+

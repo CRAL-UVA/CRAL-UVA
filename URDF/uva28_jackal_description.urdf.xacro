@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<robot name="custom" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name="base_link"></link>
+
+  <!-- Link for the top assembly plate mesh -->
+  <link name="jackal_mast_assy_link">
+    <visual>
+      <material name="black"/>
+      <geometry>
+        <mesh filename="package://uva28_description/meshes/uva28_mast_assy.STL"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://uva28_description/meshes/uva28_mast_assy.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="jackal_mast_assy_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="jackal_mast_assy_link"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+  </joint>
+
+  <!-- Link for all sensor mount points -->
+
+  <link name="cam_mount1">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </link>
+
+  <joint name="cam_mount1_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="cam_mount1" />
+    <origin xyz="0.029 0 0.6184" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Include the lockmount macro&camera mount bracket -->
+  <!-- <xacro:include filename="$(find fath_pivot_mount_description)/urdf/lockmount.urdf.xacro" /> -->
+  <!-- <xacro:include filename="$(find uva28_description)/urdf/cam_bracket.urdf.xacro" /> -->
+  <xacro:include filename="/etc/clearpath/custom/config/urdf/lockmount.urdf.xacro" />
+  <xacro:include filename="/etc/clearpath/custom/config/urdf/cam_bracket.urdf.xacro" />
+ 
+  <!-- Include the camera macro -->
+  <!-- <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" /> -->
+  <!-- <xacro:include filename="/etc/clearpath/custom/config/urdf/zed_macro.urdf.xacro" /> -->
+
+  <!-- Use the mount macro to create the pivot mount -->
+  <xacro:fath_pivot_mount prefix="zed_lock" parent_link="cam_mount1" angle="68.75">
+    <origin xyz="0 0 0" rpy="0 1.5708 0" />
+  </xacro:fath_pivot_mount>
+ 
+  <!-- Use the camera macro to create a ZED2 camera URDF -->
+  <!-- <xacro:zed_camera name="zed2" model="zed2">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:zed_camera> -->
+ 
+  <!-- Need to also create the parent base link for the camera -->
+  <link name="zed_camera_link" />
+ 
+  <!-- Create a joints that connects the camera and lockmount links -->
+  <joint name="zed_mount_joint" type="fixed">
+    <parent link="cam_bracket_mount" />
+    <child link="zed_camera_link" />
+    <origin xyz="0.0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <!-- Ouster -->
+  <!-- <xacro:include filename="$(find ouster_description)/urdf/OSDOME.urdf.xacro" /> -->
+  <xacro:include filename="/etc/clearpath/custom/config/urdf/OSDOME.urdf.xacro" />
+
+  <link name="3d_lidar_mount">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </link>
+
+  <joint name="3d_lidar_mount_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="3d_lidar_mount" />
+    <origin xyz="0.0 0 0.670" rpy="0 0 0"/>
+  </joint>
+
+  <xacro:OSDOME parent="3d_lidar_mount">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:OSDOME>
+
+ </robot>
