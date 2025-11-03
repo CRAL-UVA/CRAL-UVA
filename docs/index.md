@@ -1,6 +1,6 @@
 # CRAL – Chandra Robot Autonomy Lab, University of Virginia
 
-Welcome to the Chandra Robot Autonomy Lab (CRAL) at UVA! This repository serves as the central hub for our robotics research, documentation, and resources.
+Welcome to the Chandra Robot Autonomy Lab (CRAL) at UVA! This site is the central hub for our robotics research, documentation, and resources.
 
 ---
 
@@ -16,9 +16,9 @@ Welcome to the Chandra Robot Autonomy Lab (CRAL) at UVA! This repository serves 
 ## 📘 Documentation
 
 - [Robots Overview](https://github.com/CRAL-UVA/docs/blob/main/overview.md)
-- [Jackal Setup Guide](docs/Jackals%20Setup/jackal_main.md)
-- [Traxxas Setup Guide](docs/Traxxas%20Setup/traxxas_main.md)
-- [Autonomy](docs/Traxxas%20Setup/Autonomy/autononmy.md)
+- [Jackal Setup Guide](Jackals%20Setup/jackal_main.md)
+- [Traxxas Setup Guide](Traxxas%20Setup/traxxas_main.md)
+- [Autonomy](Traxxas%20Setup/Autonomy/autononmy.md)
 
 Full documentation is available in the [`docs/`](docs/) folder.
 
