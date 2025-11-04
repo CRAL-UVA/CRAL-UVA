@@ -1,5 +1,5 @@
-site_name: Jackal Robot Documentation
-site_description: Complete documentation for Clearpath Jackal robots at CRAL-UVA
+site_name: Traxxas UDR Robot Documentation
+site_description: Complete documentation for Traxxas UDR robots at CRAL-UVA
 site_author: CRAL-UVA
 repo_url: https://github.com/CRAL-UVA/CRAL-UVA
 repo_name: CRAL-UVA/CRAL-UVA
@@ -13,7 +13,7 @@ theme:
   hljs_languages:
     - yaml
     - rust
-    
+
   features:
     - navigation.sections
     - navigation.expand
