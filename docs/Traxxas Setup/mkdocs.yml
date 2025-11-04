@@ -1,0 +1,53 @@
+site_name: Traxxas Robot Documentation
+site_description: Complete documentation for Traxxas UDR robots at CRAL-UVA
+site_author: CRAL-UVA
+repo_url: https://github.com/CRAL-UVA/CRAL-UVA
+repo_name: CRAL-UVA/CRAL-UVA
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: orange
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: orange
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: ../index.md
+  - User Manual: Main_files/User Manual.md
+  - Tutorials: Main_files/Tutorials.md
+  - Integration: Main_files/Integration.md
+  - Maintenance: Main_files/Maintanence.md
+  - Troubleshooting: Main_files/Troubleshooting.md
+  - Autonomy:
+    - Jetson Setup: Autonomy/jetson.md
+    - VESC Configuration: Autonomy/vesc.md
+    - VESC Wire Soldering: Autonomy/vesc_wire_soldering.md
+  - Sensors:
+    - Sensor Overview: sensors/sensors.md
+  - Robots:
+    - Traxxas 1: robots/traxxas_1.md
+    - Traxxas 2: robots/traxxas_2.md
+  - Issues: Issues/Issues.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - attr_list
+  - md_in_html

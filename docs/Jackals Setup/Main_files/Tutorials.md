@@ -9,8 +9,8 @@ You can view all topics that are active using `ros2 topic list`.
 
 ### 1.3 Software Setup 
 [//]: # (TODO: Add PS4 controller setup link)
-- [Install ROS 2](Setup files/Ros_installation.md)
-- [Sensor drivers](Setup files/sensor_drivers.md)
+- [Install ROS 2](../Setup files/Ros_installation.md)
+- [Sensor drivers](../Setup files/sensor_drivers.md)
 - PS4 Joystick Controller
 
 ### 1.4 Using the Robot 
@@ -34,5 +34,7 @@ You can view all topics that are active using `ros2 topic list`.
     * If you're visualizing directly from the jackal, connect to ws://localhost:8765
     * If you're visualizing from another computer, connect to ws://192.168.1.2:8765 for the J100-0893 jackal or ws://192.168.1.3:8765 for the J100-0896 jackal.
 * You can load jackal.json into foxglove for basic visualization
+
+### 1.5 Multirobot Setup
 
 ### 1.5 Support 

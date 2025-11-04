@@ -1,0 +1,50 @@
+site_name: Jackal Robot Documentation
+site_description: Complete documentation for Clearpath Jackal robots at CRAL-UVA
+site_author: CRAL-UVA
+repo_url: https://github.com/CRAL-UVA/CRAL-UVA
+repo_name: CRAL-UVA/CRAL-UVA
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: ../index.md
+  - User Manual: Main_files/User Manual.md
+  - Tutorials: Main_files/Tutorials.md
+  - Integration: Main_files/Integration.md
+  - Maintenance: Main_files/Maintanence.md
+  - Troubleshooting: Main_files/Troubleshooting.md
+  - Setup:
+    - ROS 2 Installation: Setup files/Ros_installation.md
+    - Sensor Drivers: Setup files/sensor_drivers.md
+  - Robots:
+    - Jackal 93: robots/jackal_93.md
+    - Jackal 96: robots/jackal_96.md
+  - Multi-Robot Setup: multi_robot_setup.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - attr_list
+  - md_in_html
