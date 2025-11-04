@@ -5,9 +5,9 @@ password - CRALRObOtics
 
 ### Launch the bringup to get all the sensors running 
 - cd f1tenth_system
-`source /opt/ros/foxy/setup.bash`
-`source install/setup.bash`
-`ros2 launch f1tenth_stack bringup_launch.py`
+- `source /opt/ros/foxy/setup.bash`
+- `source install/setup.bash`
+- `ros2 launch f1tenth_stack bringup_launch.py`
 
 ## 2. Manual Motor testing
 The topic responsible to send signals to the motor is `/commands/servo/position'
