@@ -30,7 +30,7 @@ theme:
     - search.highlight
 
 nav:
-  - Home: ../index.md
+  - Home: index.md
   - User Manual: Main_files/User Manual.md
   - Tutorials: Main_files/Tutorials.md
   - Integration: Main_files/Integration.md
