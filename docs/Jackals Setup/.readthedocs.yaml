@@ -5,9 +5,6 @@ build:
   tools:
     python: "3.11"
 
-sphinx:
-  configuration: docs/Jackals Setup/mkdocs.yml
-
 mkdocs:
   configuration: docs/Jackals Setup/mkdocs.yml
 
