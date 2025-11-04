@@ -8,22 +8,13 @@ repo_name: CRAL-UVA/CRAL-UVA
 docs_dir: .
 
 theme:
-  name: material
-  palette:
-    - scheme: default
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - rust
+    
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - navigation.indexes
@@ -36,15 +27,6 @@ theme:
     - breadcrumbs
     - content.code.copy
     - content.code.annotate
-  font:
-    text: Roboto
-    code: Roboto Mono
-  icon:
-    repo: fontawesome/brands/github
-
-# Custom CSS to match Read the Docs style
-extra_css:
-  - stylesheets/readthedocs.css
 
 plugins:
   - search:
