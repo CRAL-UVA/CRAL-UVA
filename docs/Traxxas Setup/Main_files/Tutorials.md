@@ -12,35 +12,28 @@
 - Use appropriate voltage converters to protect sensitive components
 - Ensure all connections are secure to prevent disconnection during operation
 
-### 1.1 Jetson Xavier NX Setup
+
+### 1.1 Lower Level Chassis
+1. Disassembly - Removing Traxxas stack components
+2. Setting up the Batteries 
+3. 
+### 1.2 Autonomy Elements
+1. [NVIDIA Jetson setup](../Autonomy/jetson.md)
+2. WiFi Antenna Setup 
+3. [Joystick Setup](../Autonomy/Joystick.md)
+
+### 1.3 Upper Level Stack
+1. [VESC Soldering](../Upper_stack/vesc_wire_soldering.md)
+2. [VESC Setup](../Upper_stack/vesc.md)
+3. [LIDAR Setup](../sensors/lidar.md)
+4. [REALSENSE Camera Setup](../sensors/realsense_camera.md)
+
+<!-- ### 1.4 Putting it all together
+1. Trial Run
+   a. Launch components -->
 
 
-
-### 1.2 V
-## 2. Software Setup
-
-### 2.1 ROS 2 Installation
-The Traxxas platform runs ROS 2 Humble. If not already installed, follow the ROS 2 Humble installation guide for Ubuntu 22.04.
-
-### 2.2 [Sensor Driver Installation](../sensors/sensors.md)
-
-### 2.3 VESC Driver Setup
-
-1. **Install VESC ROS 2 Driver:**
-   - Clone the VESC driver repository
-   - Build using `colcon build`
-
-2. **Permission Setup:**
-   - Before launching, grant permission to access the serial port:
-     ```bash
-     sudo chmod 777 /dev/ttyACM1
-     ```
-   - **Note:** `ttyACM1` is the default port for VESC connection
-
-3. **Verify Connection:**
-   - Check if port is accessible: `ls -l /dev/ttyACM1`
-
-## 3. Launching the System
+<!-- ## 3. Launching the System
 
 ### 3.1 Basic Launch
 
@@ -106,4 +99,4 @@ QoS profile:
   Liveliness lease duration: 2147483651294967295 nanoseconds
 
 Joystick setup 
-* the bluetoothctl is not working, have to debug for now the ds4drv driver is running to keep the joystick and the car connected 
+* the bluetoothctl is not working, have to debug for now the ds4drv driver is running to keep the joystick and the car connected  -->

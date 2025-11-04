@@ -45,9 +45,9 @@ nav:
     - ROS 2 Installation: Setup files/Ros_installation.md
     - Sensor Drivers: Setup files/sensor_drivers.md
   - Robots:
-    - Jackal 93: robots/jackal_93.md
-    - Jackal 96: robots/jackal_96.md
-  - Multi-Robot Setup: multi_robot_setup.md
+    - Traxxas UDR 01: robots/traxxas_1.md
+    - Traxxas UDR 02: robots/traxxas_2.md
+  
 
 markdown_extensions:
   - pymdownx.highlight:
