@@ -8,8 +8,9 @@ The Traxxas Unlimited Desert Racer (UDR) is a high-performance RC platform modif
 
 - [User Manual](Main_files/User Manual.md) - Complete guide to operating the Traxxas vehicle
 - [Tutorials](Main_files/Tutorials.md) - Step-by-step tutorials for common tasks
-- [Autonomy Setup](Autonomy/jetson.md) - Jetson and VESC configuration
 - [Troubleshooting](Main_files/Troubleshooting.md) - Common issues and solutions
+- [Integration](Main_files/Integration.md)
+- [Maintanence](Main_files/Maintanence.md)
 
 ## Platform Specifications
 
