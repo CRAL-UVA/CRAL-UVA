@@ -7,23 +7,30 @@ repo_name: CRAL-UVA/CRAL-UVA
 # Set docs_dir to current directory since mkdocs.yml is in the same folder as docs
 docs_dir: .
 
+# theme:
+#   name: material
+#   palette:
+#     - scheme: default
+#       primary: blue
+#       accent: blue
+#       toggle:
+#         icon: material/brightness-7
+#         name: Switch to dark mode
+#     - scheme: slate
+#       primary: blue
+#       accent: blue
+#       toggle:
+#         icon: material/brightness-4
+#         name: Switch to light mode
+
 theme:
-  name: material
-  palette:
-    - scheme: default
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - rust
+
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - navigation.indexes
@@ -41,8 +48,8 @@ theme:
     code: Roboto Mono
   icon:
     repo: fontawesome/brands/github
-extra_css:
-  - stylesheets/readthedocs.css
+# extra_css:
+#   - stylesheets/readthedocs.css
 
 plugins:
   - search:
@@ -51,19 +58,19 @@ plugins:
       enable_creation_date: true
       enable_date_modified: true
 
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/CRAL-UVA/CRAL-UVA
-    - icon: fontawesome/brands/twitter
-      link: https://x.com/CRAL_UVA
+# extra:
+#   social:
+#     - icon: fontawesome/brands/github
+#       link: https://github.com/CRAL-UVA/CRAL-UVA
+#     - icon: fontawesome/brands/twitter
+#       link: https://x.com/CRAL_UVA
 
 nav:
   - Home: index.md
   - User Manual: Main_files/User_Manual.md
   - Tutorials: Main_files/Tutorials.md
   - Integration: Main_files/Integration.md
-  - Maintenance: Main_files/Maintanence.md
+  - Maintenance: Main_files/Maintenance.md
   - Troubleshooting: Main_files/Troubleshooting.md
   - Setup:
     - ROS 2 Installation: Setup_files/Ros_installation.md
