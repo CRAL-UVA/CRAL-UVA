@@ -6,9 +6,9 @@ The Clearpath Jackal is a rugged, lightweight, fast and easy-to-use unmanned gro
 
 ## Quick Links
 
-- [User Manual](Main_files/User Manual.md) - Complete guide to operating the Jackal
+- [User Manual](Main_files/User_Manual.md) - Complete guide to operating the Jackal
 - [Tutorials](Main_files/Tutorials.md) - Step-by-step tutorials for common tasks
-- [Setup Guides](Setup files/Ros_installation.md) - Software and hardware setup
+- [Setup Guides](Setup_files/Ros_installation.md) - Software and hardware setup
 - [Troubleshooting](Main_files/Troubleshooting.md) - Common issues and solutions
 
 ## Robot Specifications
