@@ -4,6 +4,9 @@ site_author: CRAL-UVA
 repo_url: https://github.com/CRAL-UVA/CRAL-UVA
 repo_name: CRAL-UVA/CRAL-UVA
 
+# Set docs_dir to current directory since mkdocs.yml is in the same folder as docs
+docs_dir: .
+
 theme:
   name: material
   palette:
