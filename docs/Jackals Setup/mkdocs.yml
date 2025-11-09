@@ -76,8 +76,8 @@ nav:
     - ROS 2 Installation: Setup_files/Ros_installation.md
     - Sensor Drivers: Setup_files/sensor_drivers.md
   - Demos:
-    - Demo 1: Single-Robot Setup: single_robot_setup.md
-    - Demo 2: Multi-Robot Setup: multi_robot_setup.md
+    - Demo 1: demos/single_robot_setup.md
+    - Demo 2: demos/multi_robot_setup.md
   - Robots:
     - Jackal 93: robots/jackal_93.md
     - Jackal 96: robots/jackal_96.md
