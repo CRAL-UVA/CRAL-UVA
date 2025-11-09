@@ -1,103 +1,117 @@
-Multi-robotModified Clearpath generator source code:
+# Demo 2 -Multi-Robot Setup Guide
 
-    * /opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/links.py
-    * /opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/platform.py
-         These now add the namespace (from the environment variable) to frame names during URDF generation.
+This guide documents the process of configuring Clearpath robots for multi-robot operations, including namespace configuration, URDF generation, and component modifications.
 
-1. Regenerated the robot description:
+## Overview
 
+When setting up multiple Clearpath robots, each robot requires a unique namespace to avoid topic and frame name conflicts. This document outlines the modifications needed to the Clearpath generator source code and configuration files to support proper namespace isolation.
+
+## Initial Setup and Problem Identification
+
+### Modified Clearpath Generator Source Code
+
+The following files were modified to add namespace support to frame names during URDF generation:
+
+- `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/links.py`
+- `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/platform.py`
+
+These files now add the namespace (from the environment variable) to frame names during URDF generation.
+
+### Regenerating Robot Description
+
+1. Regenerate the robot description with the namespace environment variable:
+
+```bash
 sudo bash -c "source /opt/ros/humble/setup.bash && CLEARPATH_ROBOT_NAMESPACE=j100_0893 python3 /opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generate_description"
-Result:
+```
 
-/etc/clearpath/robot.urdf.xacro
-  <xacro:j100 wheel="default" odom_frame="j100_0893/odom" base_link_frame="j100_0893/base_link"/>
+**Result:** The generated `/etc/clearpath/robot.urdf.xacro` will include namespaced frames:
 
-2.Added environment variable in systemd service:
+```xml
+<xacro:j100 wheel="default" odom_frame="j100_0893/odom" base_link_frame="j100_0893/base_link"/>
+```
 
+2. Add the environment variable to the systemd service:
+
+```bash
 sudo systemctl edit clearpath-robot.service
+```
 
+Add the following configuration:
+
+```ini
+[Service]
 Environment="CLEARPATH_ROBOT_NAMESPACE=j100_0893"
+```
 
+3. Restart the service:
 
-and restarted:
-
+```bash
 sudo systemctl restart clearpath-robot.service
+```
 
+### Observed Behavior
 
+The following behavior was observed during testing:
 
-3.Observed the behavior:
+- **With environment variable enabled:**
+  - `/etc/clearpath/robot.urdf.xacro` includes namespace frames
+  - ❌ `robot_state_publisher` does not start, resulting in "no TF data received"
+  
+- **Without environment variable:**
+  - The URDF reverts to plain frames (`odom`, `base_link`)
+  - ✅ `robot_state_publisher` launches correctly and TFs appear
 
-    * With the environment variable enabled:
-        /etc/clearpath/robot.urdf.xacro includes namespace frames
-        BUT → robot_state_publisher does not start, resulting in “no TF data received.”
-    * Without the environment variable:
-         The URDF reverts to plain frames (odom, base_link),
-        BUT robot_state_publisher launches correctly and TFs appear.
+## Current Issue
 
+The system is stuck between two inconsistent states:
 
-❗ Current Issue
+| Scenario | URDF Frame Names | robot_state_publisher | TF Visible? |
+|----------|------------------|----------------------|-------------|
+| `CLEARPATH_ROBOT_NAMESPACE` enabled | ✅ Prefixed (`j100_0893/odom`) | ❌ Missing | ❌ No TF data |
+| Environment variable removed | ❌ Plain (`odom`) | ✅ Running | ✅ TF visible |
 
-stuck between two inconsistent states:
+**Summary:** Namespace propagation to URDF works, but enabling it breaks `robot_state_publisher` startup.
 
-Scenario
-	URDF Frame Names
-	robot_state_publisher
-	TF Visible?
+## Proposed Solution
 
-CLEARPATH_ROBOT_NAMESPACE enabled
-	✅ Prefixed (j100_0893/odom)
-	❌ Missing
-	❌ No TF data
+Instead of injecting namespace via environment variables, introduce a prefix configuration in `/etc/clearpath/robot.yaml`:
 
-Environment variable removed
-	❌ Plain (odom)
-	✅ Running
-	✅ TF visible
-
-
-Essentially, the namespace propagation to URDF works —
- but enabling it breaks robot_state_publisher startup
-
-
-
-Next Step Proposal？？
-
-Instead of injecting namespace via environment variables,
- introduce prefix in /etc/clearpath/robot.yaml:
-
-ros2:
-    namespace: j100_0893
-    prefix: robot1
-
-
-
-
-and modify the generator to read prefix instead of namespace for TF frame names:
-
-* Topics remain under /j100_0893/...
-* Frames become robot1/odom, robot1/base_link, etc.
-* 
-* 
-
-
-
-
-
-Configuration file
-/etc/clearpath/robot.yaml:
+```yaml
 system:
   ros2:
     namespace: j100_0893
+    prefix: robot1
+```
 
+Modify the generator to read the prefix instead of namespace for TF frame names:
 
-Code Modifications (Step by Step)：
-1.generator.py
-File:
-/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py
+- Topics remain under `/j100_0893/...`
+- Frames become `robot1/odom`, `robot1/base_link`, etc.
 
-(1) Read and export namespace/prefix
-(2) Unified generate sequence
+## Configuration File
 
+Edit `/etc/clearpath/robot.yaml`:
+
+```yaml
+system:
+  ros2:
+    namespace: j100_0893
+```
+
+## Code Modifications
+
+### 1. Generator Core (`generator.py`)
+
+**File:** `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py`
+
+**Modifications:**
+1. Read and export namespace/prefix from configuration
+2. Implement unified generate sequence
+
+**Updated `generate()` method:**
+
+```python
 def generate(self) -> None:
     self.generate_common()
     self.generate_platform(prefix=self.prefix)
@@ -107,126 +121,218 @@ def generate(self) -> None:
     self.generate_sensors(prefix=self.prefix)
     self.generate_manipulators(prefix=self.prefix)
     self.generate_extras()
+```
 
-2.platform.py — Construct Namespaced Base Frames
-File:
-/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/platform.py
+### 2. Platform Base Frames (`platform.py`)
 
+**File:** `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/platform.py`
 
+Modify to construct namespaced base frames using the prefix parameter.
 
-Sensors:
-Make the generator.py automatically pass namespace="j100_0893" when calling <xacro:ouster_os1>.
-Follow these steps:
-1.Open  generator.py file.  
-/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py
+## Sensor Configuration
 
-2.Find the function:
-def generate_sensors(self, prefix="") → None:
+### Ouster OS1 LiDAR
 
-3.Inside its loop, locate the following code:
+To automatically pass the namespace parameter when calling `<xacro:ouster_os1>`, follow these steps:
 
-self.xacro_writer.write_macro(
-    macro='{0}'.format(sensor_description.model),
-    parameters=sensor_description.parameters,
-    blocks=XacroWriter.add_origin(
-        sensor_description.xyz, sensor_description.rpy)
-)
+#### Step 1: Modify Generator (`generator.py`)
 
-4.Right before that block, insert this logic 
+**File:** `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py`
 
-if hasattr(self, "namespace") and self.namespace:
-    if "namespace" not in sensor_description.parameters:
-        sensor_description.parameters["namespace"] = self.namespace
+1. Locate the function:
+   ```python
+   def generate_sensors(self, prefix="") -> None:
+   ```
 
-5.Now, when the generator calls <xacro:ouster_os1>,  it will automatically pass the namespace like this:
+2. Inside the loop, find the following code:
+   ```python
+   self.xacro_writer.write_macro(
+       macro='{0}'.format(sensor_description.model),
+       parameters=sensor_description.parameters,
+       blocks=XacroWriter.add_origin(
+           sensor_description.xyz, sensor_description.rpy)
+   )
+   ```
+
+3. **Before** that block, insert this logic:
+   ```python
+   if hasattr(self, "namespace") and self.namespace:
+       if "namespace" not in sensor_description.parameters:
+           sensor_description.parameters["namespace"] = self.namespace
+   ```
+
+This ensures that when the generator calls `<xacro:ouster_os1>`, it automatically passes the namespace:
+```xml
 <xacro:ouster_os1 ... namespace="j100_0893" />
-This ensures every sensor macro (like ouster_os1.urdf.xacro) automatically receives the correct namespace from the generator — no need to manually add it in each call.
+```
 
-We need to pass the namespace parameter from the generator, and also define this parameter inside the ouster_os1.urdf.xacro file.
- Below are the steps to define this parameter:
+#### Step 2: Modify Ouster OS1 Xacro File
 
-1.Open the file/opt/ros/humble/share/clearpath_sensors_description/urdf/ouster_os1.urdf.xacro
+**File:** `/opt/ros/humble/share/clearpath_sensors_description/urdf/ouster_os1.urdf.xacro`
 
-2.At the top of the file, inside the <xacro:macro ...> definition,  add a parameter for the namespace, like this:
-<xacro:macro name="ouster_os1" params="name parent_link namespace:='' ...">
-(Make sure to include namespace:='' in the parameter list.)
-3.Right below the <xacro:macro ...> line,  add the following lines to handle the namespace prefix:
-3.Update all link and joint names inside the file to include ${ns} as a prefix:
+1. Add namespace parameter to the macro definition:
+   ```xml
+   <xacro:macro name="ouster_os1" params="name parent_link namespace:='' ...">
+   ```
+   (Ensure `namespace:=''` is included in the parameter list)
 
-<link name="${name}_link">
+2. Add namespace prefix handling right after the macro definition:
+   ```xml
+   <xacro:if value="${namespace != ''}">
+     <xacro:property name="ns" value="${namespace + '/'}" />
+   </xacro:if>
+   <xacro:unless value="${namespace != ''}">
+     <xacro:property name="ns" value="" />
+   </xacro:unless>
+   ```
 
-should be changed to
+3. Update all link and joint names to include `${ns}` prefix:
+   - Change: `<link name="${name}_link">` → `<link name="${ns}${name}_link">`
+   - Change: `<joint name="${name}_joint" type="fixed">` → `<joint name="${ns}${name}_joint" type="fixed">`
 
-<link name="${ns}${name}_link">
+   **Important:** Do not add `${ns}` to the parent link. Keep it as:
+   ```xml
+   <parent link="${parent_link}" />
+   ```
 
-and
+4. Example macro call:
+   ```xml
+   <xacro:ouster_os1 name="lidar3d_0" parent_link="base_link" namespace="j100_0893"/>
+   ```
 
-<joint name="${name}_joint" type="fixed">
+This ensures the generator dynamically injects the robot namespace into all link and joint names when building the URDF.
 
-should be changed to
+## Attachment Configuration
 
-<joint name="${ns}${name}_joint" type="fixed">
+### Fenders
 
-Note:
- Do not add ${ns} to the parent link — keep it as:
+To automatically support namespace when calling `<xacro:fender>`:
 
-<parent link="${parent_link}" />
+#### Step 1: Modify Generator (`generator.py`)
 
+**File:** `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py`
 
-5.In the generator code, make sure when calling the macro, the namespace parameter is passed properly, e.g.:
-<xacro:ouster_os1 name="lidar3d_0" parent_link="base_link" namespace="j100_0893"/>
-This way, the generator dynamically injects the robot namespace into all link and joint names when building the URDF.
+1. Locate the function:
+   ```python
+   def generate_attachments(self, prefix="") -> None:
+   ```
 
+2. Add namespace parameter passing logic similar to sensors.
 
-Fenders(attachment):
-Make the fender.urdf.xacro and generator.py automatically support, namespace="j100_0893" when calling <xacro:fender>.
-1.Open the generator.py file
-/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_common/description/generator.py
-2.Find the function:
-def generate_attachments(self, prefix="") → None:
-3.Now modify the fender.urdf.xacro file to properly handle the namespace parameter.
-Open:
-/opt/ros/humble/share/clearpath_platform_description/urdf/j100/attachments/fender.urdf.xacro
-4.At the top of the file, inside the <xacro:macro ...> definition, add a parameter for namespace, like this:
-<xacro:macro name="fender" params="name model parent_link:=base_link namespace:='' *origin">
-5.Right below the <xacro:macro ...> line, add these lines to handle the namespace prefix:
-<xacro:if value="${namespace != ''}">
-  <xacro:property name="ns" value="${namespace + '/'}" />
-</xacro:if>
-<xacro:unless value="${namespace != ''}">
-  <xacro:property name="ns" value="" />
-</xacro:unless>
-6.Update all link and joint names inside the file to include ${ns} as a prefix and Keep the parent link unchanged (do not prefix it).
+#### Step 2: Modify Fender Xacro File
 
+**File:** `/opt/ros/humble/share/clearpath_platform_description/urdf/j100/attachments/fender.urdf.xacro`
 
+1. Add namespace parameter to the macro definition:
+   ```xml
+   <xacro:macro name="fender" params="name model parent_link:=base_link namespace:='' *origin">
+   ```
+
+2. Add namespace prefix handling:
+   ```xml
+   <xacro:if value="${namespace != ''}">
+     <xacro:property name="ns" value="${namespace + '/'}" />
+   </xacro:if>
+   <xacro:unless value="${namespace != ''}">
+     <xacro:property name="ns" value="" />
+   </xacro:unless>
+   ```
+
+3. Update all link and joint names to include `${ns}` prefix.
+   **Note:** Keep the parent link unchanged (do not prefix it).
+
+## IMU Configuration
+
+### IMU Filter Configuration
+
+Edit the IMU filter configuration file:
+
+```bash
 sudo nano /opt/ros/humble/share/imu_filter_madgwick/config/imu_filter.yaml
+```
 
-ODOM:
-/opt/ros/humble/lib/python3.10/site-packages/clearpath_generator_common/param/platform.py
-template：
-/opt/ros/humble/share/clearpath_control/config/j100/control.yaml
+### IMU Parameter Generation
 
+**File:** `/opt/ros/humble/lib/python3.10/site-packages/clearpath_generator_common/param/platform.py`
 
+Modify the `ImuFilterParam` class:
+
+```python
+class ImuFilterParam(BaseParam):
+    def generate_parameters(self, use_sim_time: bool = False):
+        # Add namespace-aware parameter generation
+        ...
+```
+
+## Odometry Configuration
+
+### Control Configuration Template
+
+**Template file:** `/opt/ros/humble/share/clearpath_control/config/j100/control.yaml`
+
+**Parameter generation file:** `/opt/ros/humble/lib/python3.10/site-packages/clearpath_generator_common/param/platform.py`
+
+After regeneration, verify the control configuration:
+
+```bash
 sudo clearpath-robot-generate
-
 cat /etc/clearpath/platform/config/control.yaml
+```
 
+**Expected output:**
+```yaml
 left_wheel_names: ['j100_0893/front_left_wheel_joint', 'j100_0893/rear_left_wheel_joint']
 right_wheel_names: ['j100_0893/front_right_wheel_joint', 'j100_0893/rear_right_wheel_joint']
+```
 
+## LiDAR Configuration
 
-IMU:
-/opt/ros/humble/lib/python3.10/site-packages/clearpath_generator_common/param/platform.py
+### Sensor Parameter Generation
 
-Modify：
-class ImuFilterParam(BaseParam)
-def generate_parameters(self, use_sim_time: bool = False)
+**File:** `/opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_robot/param/sensors.py`
 
+Modify the `generate_config` method to include namespace-aware configuration.
 
-lidar，config：
-sudo nano /opt/ros/humble/local/lib/python3.10/dist-packages/clearpath_generator_robot/param/sensors.py
+After modification, regenerate the sensor configuration:
 
-Modified：
-generate_config :
-then,
-etc/clearpath/sensors/config/lidar3d_0.yaml:
+```bash
+sudo clearpath-robot-generate
+```
+
+Verify the generated configuration:
+
+```bash
+cat /etc/clearpath/sensors/config/lidar3d_0.yaml
+```
+
+## Verification Steps
+
+After completing all modifications:
+
+1. Regenerate robot description:
+   ```bash
+   sudo clearpath-robot-generate
+   ```
+
+2. Verify URDF includes namespaced frames:
+   ```bash
+   cat /etc/clearpath/robot.urdf.xacro
+   ```
+
+3. Check that `robot_state_publisher` starts correctly:
+   ```bash
+   sudo systemctl status clearpath-robot.service
+   ```
+
+4. Verify TF data is published:
+   ```bash
+   ros2 run tf2_ros tf2_echo /map /j100_0893/base_link
+   ```
+
+## Troubleshooting
+
+- **If `robot_state_publisher` fails to start:** Check that all frame names in the URDF are consistently namespaced and match the expected format.
+
+- **If TF data is missing:** Verify that the namespace parameter is correctly passed to all xacro macros and that the prefix handling logic is properly implemented.
+
+- **If topics are not namespaced:** Ensure the ROS 2 namespace configuration in `/etc/clearpath/robot.yaml` is correct.
