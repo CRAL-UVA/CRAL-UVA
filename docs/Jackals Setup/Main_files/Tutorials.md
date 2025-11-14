@@ -9,8 +9,8 @@ You can view all topics that are active using `ros2 topic list`.
 
 ### 1.3 Software Setup 
 [//]: # (TODO: Add PS4 controller setup link)
-- [Install ROS 2](../Setup files/Ros_installation.md)
-- [Sensor drivers](../Setup files/sensor_drivers.md)
+- [Install ROS 2](Setup_files/Ros_installation.md)
+- [Sensor drivers](Setup_files/sensor_drivers.md)
 - PS4 Joystick Controller
 
 ### 1.4 Using the Robot 

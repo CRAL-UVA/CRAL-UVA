@@ -72,16 +72,12 @@ nav:
   - Integration: Main_files/Integration.md
   - Maintenance: Main_files/Maintenance.md
   - Troubleshooting: Main_files/Troubleshooting.md
-  - Setup:
-    - ROS 2 Installation: Setup_files/Ros_installation.md
-    - Sensor Drivers: Setup_files/sensor_drivers.md
   - Demos:
     - Demo 1: demos/single_robot_setup.md
     - Demo 2: demos/multi_robot_setup.md
   - Robots:
     - Jackal 93: robots/jackal_93.md
     - Jackal 96: robots/jackal_96.md
-
 
 markdown_extensions:
   - pymdownx.highlight
