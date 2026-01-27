@@ -1,0 +1,68 @@
+site_name: Traxxas UDR Robot Documentation
+site_description: Complete documentation for Traxxas UDR robots at CRAL-UVA
+site_author: CRAL-UVA
+repo_url: https://github.com/CRAL-UVA/CRAL-UVA
+repo_name: CRAL-UVA/CRAL-UVA
+
+# Set docs_dir to current directory since mkdocs.yml is in the same folder as docs
+docs_dir: .
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - rust
+
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - breadcrumbs
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search:
+      lang: en
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+nav:
+  - Home: index.md
+  - User Manual: Main_files/User Manual.md
+  - Tutorials: Main_files/Tutorials.md
+  - Integration: Main_files/Integration.md
+  - Maintenance: Main_files/Maintanence.md
+  - Troubleshooting: Main_files/Troubleshooting.md
+  - Setup:
+    - ROS 2 Installation: Setup files/Ros_installation.md
+    - Sensor Drivers: Setup files/sensor_drivers.md
+  - Robots:
+    - Traxxas UDR 01: robots/traxxas_1.md
+    - Traxxas UDR 02: robots/traxxas_2.md
+  
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
