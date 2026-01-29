@@ -56,14 +56,17 @@ The Traxxas Unlimited Desert Racer (UDR) is a high-performance RC platform modif
 
 #### Wireless Connection
 1. **Power on the vehicle** and wait for network initialization
-2. **Connect to the same network** as the Traxxas vehicle (check network settings)
+2. **Connect to the same network** as the Traxxas vehicle (check network settings), usually **cralrobotics**
 3. **SSH into the Jetson:**
-   ```bash
-   ssh cral-traxxas@192.168.1.4
-   ```
-4. **Enter password:** `CRALRObOtics`
-
-**Note:** For Traxxas Vehicle 1, use IP `192.168.1.101` instead.
+   - For Traxxas1:
+     ```bash
+     ssh cral-traxxas@192.168.1.4
+     ```
+   - For Traxxas2:
+     ```bash
+     ssh cral_traxxas2@192.168.4.43 
+     ```
+4. Enter password: CRALR0B0TICS
 
 #### Ethernet Connection
 1. Connect an Ethernet cable directly from your computer to the Jetson
@@ -76,8 +79,8 @@ The Traxxas Unlimited Desert Racer (UDR) is a high-performance RC platform modif
    - Connect a monitor via HDMI or DisplayPort
    - Connect USB keyboard and mouse
 2. **Login credentials:**
-   - Username: `cral-traxxas`
-   - Password: `CRALRObOtics`
+   - Username: `cral-traxxas` or `cral_traxxas2`
+   - Password: `CRALR0B0TICS`
 
 
 
