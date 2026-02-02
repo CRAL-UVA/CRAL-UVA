@@ -22,6 +22,10 @@
 2. WiFi Antenna Setup 
 3. [Joystick Setup](../Autonomy/Joystick.md)
 
+### 1.3 ROS2 Setup
+#This helps to create services publish/subscribe topics how to create an occupancy grid, tf trees
+1. [How to create a service?](../Ros2_setup/services.md)
+
 ### 1.3 Upper Level Stack
 1. [VESC Soldering](../Upper_stack/vesc_wire_soldering.md)
 2. [VESC Setup](../Upper_stack/vesc.md)
@@ -100,3 +104,6 @@ QoS profile:
 
 Joystick setup 
 * the bluetoothctl is not working, have to debug for now the ds4drv driver is running to keep the joystick and the car connected  -->
+
+
+[def]: ../Ros2_setup/services.md
