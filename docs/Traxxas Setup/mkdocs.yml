@@ -44,6 +44,7 @@ nav:
   - Setup:
     - ROS 2 Installation: Setup files/Ros_installation.md
     - Sensor Drivers: Setup files/sensor_drivers.md
+    - Create a Service: ../Ros2setup/ser
   - Robots:
     - Traxxas UDR 01: robots/traxxas_1.md
     - Traxxas UDR 02: robots/traxxas_2.md
