@@ -25,6 +25,7 @@
 ### 1.3 ROS2 Setup
 #This helps to create services publish/subscribe topics how to create an occupancy grid, tf trees
 1. [How to create a service?](../Ros2_setup/services.md)
+2. [How to create a map using slam](../Ros2_setup/Mapping.md)
 
 ### 1.3 Upper Level Stack
 1. [VESC Soldering](../Upper_stack/vesc_wire_soldering.md)
