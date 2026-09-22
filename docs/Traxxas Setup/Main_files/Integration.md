@@ -8,7 +8,7 @@ This page documents what CRAL adds to or replaces on the stock vehicle described
 |---|---|
 | **Compute unit** | NVIDIA Jetson Xavier NX |
 | **OS / software** | JetPack (flashed via NVIDIA SDK Manager), ROS 2 |
-| **ROS 2 distro** | ⚠️ **[VERIFY]** — Foxy referenced for bringup on UDR 01, Humble referenced in the SLAM/services docs; confirm the actual per-robot distro before relying on exact commands |
+| **ROS 2 distro** | Foxy |
 
 ## Motor Controller
 
