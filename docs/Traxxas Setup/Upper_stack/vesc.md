@@ -70,3 +70,64 @@ By default, the motor configuration sets a safe top motor RPM. If you wish to ch
 [alt text](../images/vesc_setup/image16.png)
 
 **Once this is done, lets do a sanity test on the working of the motor - Motor test**s
+
+## 3. UDR-Specific Configuration Values (Reference)
+
+> ⚠️ **Use these values, not any older ones.** An earlier VESC configuration circulated in lab notes was built for a Traxxas Slash 4x4, not the UDR, and used a smaller motor. It is superseded and should not be used on the UDR platform. The values below are UDR-specific and current.
+
+### 3.1 Prerequisites
+- VESC Tool installed (register at [vesc-project.com/vesc_tool](https://vesc-project.com/vesc_tool) for the free-tier download)
+- Vehicle on a stand with wheels clear — motor will spin during detection
+- Confirm firmware reads **VESC 6 MkVI** in VESC Tool before proceeding; update firmware if a mismatch is offered. A firmware/hardware version mismatch (e.g. Mk5 firmware on Mk6 hardware) is a known cause of hard-to-diagnose motor faults.
+
+### 3.2 Detection parameters
+| Parameter | Value |
+|---|---|
+| Detection current | 12 A |
+| Detection duty | 0.06 |
+| Motor size | Large / 75 mm |
+| HFI | Disabled |
+
+Click **Run Detection** — hold the car steady, wheels will spin briefly. Note the auto-set **Observer Gain** value from the wizard before continuing (write it down), then **Apply** and **Write Motor Configuration**.
+
+> **Direction check — do not skip:** in Realtime Data, ramp duty to 0.10 and confirm the car moves forward. If reversed, swap any two motor phase wires and re-run detection before continuing.
+
+### 3.3 FOC / Advanced tuning
+| Parameter | Value |
+|---|---|
+| Observer Gain | Exactly half the value noted during detection (e.g. wizard gives 3.14 → enter 1.57) |
+| Openloop ERPM | 600 |
+| Sensorless ERPM | 1500 |
+
+### 3.4 Current limits (Motor Settings → General → Current)
+| Parameter | Value |
+|---|---|
+| Motor Max | 80 A |
+| Motor Max (Brake) | -60 A (unchanged from default) |
+| Battery Max | 60 A |
+| Battery Max (Regen) | -20 A (unchanged from default) |
+
+### 3.5 Voltage limits (Motor Settings → General → Voltage)
+| Parameter | Value |
+|---|---|
+| Battery cutoff start | 3.4 V/cell (20.4 V on 6S) |
+| Battery cutoff end | 3.2 V/cell (19.2 V on 6S) |
+
+### 3.6 RPM limits (Motor Settings → General → RPM)
+| Parameter | Value |
+|---|---|
+| ERPM limit (forward) | 100,000 |
+| ERPM limit (reverse) | -100,000 |
+
+### 3.7 Speed PID (App Settings → PID Controllers → Speed)
+- Kp: halve the existing value (e.g. 0.004 → 0.002)
+- Ki and Kd: leave unchanged
+- Write App Configuration after changing
+
+### 3.8 Input calibration (App Settings → PPM → Setup Input)
+- Click **Start**; hold full forward throttle 1s, full brake 1s, return to neutral 1s
+- Click **Apply**, then **Write App Configuration**
+- Unplug USB. Test-drive and verify: smooth acceleration from standstill, no jitter, higher top speed than the unconfigured baseline
+
+### 3.9 ERPM ↔ RPM conversion
+VESC Tool reports ERPM (electrical RPM), the motor's revolutions before gear reduction — not wheel speed. Approximate conversion: motor spins at ~55.9 RPM per 1000 ERPM; apply the 17.89:1 internal gear ratio on top of that to get wheel RPM. If tuned speed appears to mismatch observed wheel speed, this is the expected explanation, not a fault.

@@ -79,7 +79,36 @@ The Traxxas Unlimited Desert Racer (UDR) is a high-performance RC platform modif
    - Username: `cral-traxxas`
    - Password: `CRALRObOtics`
 
+**Fallback — GUI login stuck:** Use `Ctrl+Alt+F2` to reach a boot-up terminal and log in directly. From that terminal:
+```bash
+nmcli device wifi list
+nmcli dev wifi connect <wifi-name> password <password>
+ip addr show   # look under wlan0 for the assigned IP (typically 192.168.x.x)
+```
+That IP is the SSH target from another machine.
 
+## 5. Bringing Up the Software Stack
 
+Before launching, the VESC USB serial port must be writable:
+```bash
+sudo chmod 777 /dev/ttyACM1
+```
+Skipping this produces: `[vesc_driver_node-1] FATAL ... SerialException ... Permission denied.`
 
+Then bring up the sensor/driver stack:
+```bash
+cd f1tenth_system
+source /opt/ros/<ros2-distro>/setup.bash   # confirm distro per robot — see Integration
+source install/setup.bash
+ros2 launch f1tenth_stack bringup_launch.py
+```
+This starts the VESC driver, VESC-to-odometry node, and robot state publisher.
+
+## 6. Shutting Down
+
+1. Stop any running ROS 2 nodes/launch files (`Ctrl+C`).
+2. Safely stop the vehicle if motors are active.
+3. Shut down the Jetson cleanly: `sudo shutdown now` (locally or over SSH).
+4. Wait for the Jetson to fully power down before disconnecting the battery.
+5. Store the drive LiPo in a fire-resistant bag.
 

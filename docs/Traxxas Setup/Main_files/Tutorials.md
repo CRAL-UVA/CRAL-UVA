@@ -1,109 +1,76 @@
+# Tutorials
 
-## 1. Initial Setup and Hardware Integration
+## 1. Power On & Connect
 
-##Power and Wiring
-* **LiDAR Power:** LiPo battery powers LiDAR via 9-36V DC converter
-* **RealSense Camera:** Connected via USB3 port on Jetson
-* **Hokuyo UST-10LX:** Connected via 12V output and Ethernet to Jetson
-* **VESC Controller:** Connected via USB serial port (`/dev/ttyACM1`)
+1. Connect the drive LiPo (6S) and the compute/peripheral LiPo (3S, 11.1V) — verify polarity before connecting.
+2. **Safety check:** elevate the vehicle or place it in a clear area before powering on motors. Keep hands/objects clear of wheels.
+3. Wait 30–60 seconds for the Jetson Xavier NX to boot.
+4. Connect your laptop to the robot's WiFi (see the robot's own page: [Traxxas UDR 01](../robots/traxxas_1.md) / [Traxxas UDR 02](../robots/traxxas_2.md)) and SSH in.
 
-**Important Wiring Notes:**
-- Always verify polarity before connecting power
-- Use appropriate voltage converters to protect sensitive components
-- Ensure all connections are secure to prevent disconnection during operation
+## 2. Bring Up the Full Stack
 
+```bash
+sudo chmod 777 /dev/ttyACM1   # required once per boot, or VESC connection fails with Permission denied
+cd f1tenth_system
+source /opt/ros/<ros2-distro>/setup.bash
+source install/setup.bash
+ros2 launch f1tenth_stack bringup_launch.py
+```
+This starts the VESC driver, VESC-to-odometry node, and robot state publisher.
 
-### 1.1 Lower Level Chassis
-1. Disassembly - Removing Traxxas stack components
-2. Setting up the Batteries 
-3. 
-### 1.2 Autonomy Elements
-1. [NVIDIA Jetson setup](../Autonomy/jetson.md)
-2. WiFi Antenna Setup 
-3. [Joystick Setup](../Autonomy/Joystick.md)
+## 3. Manual Motor / Servo Test
 
-### 1.3 ROS2 Setup
-1. [How to create a service?](../Ros2_setup/services.md)
-2. [How to create a map using slam](../Ros2_setup/Mapping.md)
+```bash
+ros2 topic pub /commands/motor/speed std_msgs/msg/Float64 "data: 1500.0"
+ros2 topic pub /commands/motor/speed std_msgs/msg/Float64 "data: 0.0"     # stop
+ros2 topic pub /commands/servo/position std_msgs/msg/Float64 "data: 0.85"
+```
+You should hear/see the wheels spin at the first command, and stop at the second.
 
-### 1.3 Upper Level Stack
-1. [VESC Soldering](../Upper_stack/vesc_wire_soldering.md)
-2. [VESC Setup](../Upper_stack/vesc.md)
-3. [LIDAR Setup](../sensors/lidar.md)
-4. [REALSENSE Camera Setup](../sensors/realsense_camera.md)
+## 4. Sensor Sanity Checks
 
-<!-- ### 1.4 Putting it all together
-1. Trial Run
-   a. Launch components -->
+```bash
+ros2 topic echo /sensors/imu/raw | grep -A 3 "orientation:"
+ros2 topic echo /scan
+```
 
+## 5. Joystick Test
 
-<!-- ## 3. Launching the System
+```bash
+ls /dev/input/js*          # confirm the kernel sees the joystick
+sudo jstest /dev/input/js0 # test raw input
+```
+To identify the deadman switch, echo the `/joy` topic while pressing buttons. Note: Bluetooth pairing via `bluetoothctl` is currently unreliable — `ds4drv` is used as a workaround to keep the controller connected. See [Joystick Setup](../Autonomy/Joystick.md).
 
-### 3.1 Basic Launch
+## 6. SLAM Mapping
 
-1. **Navigate to workspace:**
-   ```bash
-   cd ~/ros2_ws  # or your workspace directory
-   ```
+See [Mapping](../Ros2_setup/Mapping.md) for the full walkthrough (launching `slam_toolbox`, viewing in RViz, saving the map). Quick reference:
+```bash
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=<path> use_sim_time:=false
+ros2 run nav2_map_server map_saver_cli -f my_map
+```
 
-2. **Source the workspace:**
-   ```bash
-   source /opt/ros/humble/setup.bash
-   source install/setup.bash
-   ```
+## 7. Time Sync
 
-3. **Launch the base code:**
-   ```bash
-   ros2 launch base_code base_code.launch.py
-   ```
-   Or if using the f1tenth stack:
-   ```bash
-   cd f1tenth_system
-   ros2 launch f1tenth_stack bringup_launch.py
-   ```
+If the system clock has drifted (common after being powered off for a while):
+```bash
+sudo timedatectl set-ntp true
+```
 
-### 3.2 Launch File Components
+## Command Cheat Sheet
 
-The launch file typically starts:
-* **VESC Driver Node:** Handles motor control and IMU data
-* **VESC to Odometry Node:** Converts VESC data to ROS odometry messages
-* **Robot State Publisher:** Publishes robot transforms using URDF model
-
-**Launch File Location:**
-`/home/cral-traxxas/ros2_ws/src/base_code/launch`
-Launch File Setup
-
-* Custom launch file created to start: /home/cral-traxxas/ros2_ws/src/base_code/launch
-    * VESC Driver
-    * VESC to Odom Node
-    * Robot State Publisher with URDF
-* Before launching the file give permission to access the port - ttyACM1 is the port thru which the vesc is connected to the jetson. sudo chmod 777 /dev/ttyACM1
-* or you will face this error 
-
-[vesc_driver_node-1] [FATAL] [1757516613.565518522] [vesc_driver_node]: Failed to connect to the VESC, SerialException Failed to open the serial port /dev/ttyACM1 to the VESC. open: Permission denied failed..
-[INFO] [vesc_driver_node-1]: process has finished cleanly [pid 5975]
-^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
-[vesc_to_odom_node-2] [INFO] [1757516632.393750407] [rclcpp]: signal_handler(signal_value=2)
-
-Testing:
-* to test the motors run - ros2 topic pub /commands/motor/speed std_msgs/msg/Float64 "data: 1500.0" 
-* this is because the vescdrivernode is the one that publishes the /commands/motor/topic and the message is std_msgs/msg/Float64
-
-Node name: vesc_driver_node
-Node namespace: /
-Topic type: std_msgs/msg/Float64
-Endpoint type: SUBSCRIPTION
-GID: 01.0f.aa.bc.86.17.08.97.01.00.00.00.00.00.19.04.00.00.00.00.00.00.00.00
-QoS profile:
-  Reliability: RMW_QOS_POLICY_RELIABILITY_RELIABLE
-  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE
-  Lifespan: 2147483651294967295 nanoseconds
-  Deadline: 2147483651294967295 nanoseconds
-  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC
-  Liveliness lease duration: 2147483651294967295 nanoseconds
-
-Joystick setup 
-* the bluetoothctl is not working, have to debug for now the ds4drv driver is running to keep the joystick and the car connected  -->
-
-
-[def]: ../Ros2_setup/services.md
+| Task | Command |
+|---|---|
+| Fix VESC permission error | `sudo chmod 777 /dev/ttyACM1` |
+| Bring up full stack | `ros2 launch f1tenth_stack bringup_launch.py` |
+| Motor test | `ros2 topic pub /commands/motor/speed std_msgs/msg/Float64 "data: 1500.0"` |
+| Stop motor | `ros2 topic pub /commands/motor/speed std_msgs/msg/Float64 "data: 0.0"` |
+| Servo test | `ros2 topic pub /commands/servo/position std_msgs/msg/Float64 "data: 0.85"` |
+| IMU check | `ros2 topic echo /sensors/imu/raw \| grep -A 3 "orientation:"` |
+| LiDAR check | `ros2 topic echo /scan` |
+| Joystick device check | `ls /dev/input/js*` |
+| Joystick raw test | `sudo jstest /dev/input/js0` |
+| Start SLAM | `ros2 launch slam_toolbox online_async_launch.py slam_params_file:=<path> use_sim_time:=false` |
+| Save map | `ros2 run nav2_map_server map_saver_cli -f my_map` |
+| Fix clock drift | `sudo timedatectl set-ntp true` |
+| Restart ROS2 daemon (missing nodes) | `ros2 daemon stop && ros2 daemon start` |
