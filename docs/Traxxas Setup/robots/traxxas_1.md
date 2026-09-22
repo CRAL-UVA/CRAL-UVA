@@ -18,7 +18,7 @@ source install/setup.bash
 sudo systemctl restart traxxas_robot.service
 ```
 
-## Autostart Service — always restart the service before working
+## Autostart Service — 
 
 The teleop/autonomy stack runs on Jetson boot via `traxxas_robot.service`.
 
