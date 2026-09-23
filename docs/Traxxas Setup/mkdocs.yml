@@ -43,8 +43,8 @@ nav:
   # - Tutorials: Main_files/Tutorials.md
 
   - Robots:
-  - Traxxas UDR 01: robots/traxxas_1.md
-  - Traxxas UDR 02: robots/traxxas_2.md
+    - Traxxas UDR 01: robots/traxxas_1.md
+    - Traxxas UDR 02: robots/traxxas_2.md
 
   - Setup:
     - ROS 2:
