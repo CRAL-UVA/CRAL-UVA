@@ -9,8 +9,7 @@
 | **SSH command** | `ssh administrator@cpr-j100-0893.local` |
 | **Password** | clearpath |
 | **ROS namespace** | `j100_0893` |
-| **Foxglove bridge (remote)** | `ws://192.168.1.2:8765` ⚠️ **[VERIFY]** — documented separately from the SSH static IP above; confirm before relying on it |
-| **Autonomy stack repo** | [github.com/CRAL-UVA/CRALAutonomyStack/tree/main/jackal93](https://github.com/CRAL-UVA/CRALAutonomyStack/tree/main/jackal93) |
+| **Autonomy stack repo** | [github.com/CRAL-UVA/CRALAutonomyStack/tree/main/jackal93](https://github.com/CRAL-UVA/CRALAutonomyStack/tree/main/jackal93) | (the code is not up-to-date yet)
 
 ## Initial steps 
 Once you have been sshed into the robot, always restart the robot service once ,
