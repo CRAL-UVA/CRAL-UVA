@@ -17,9 +17,10 @@ New to the Jackal robots? Start here:
 
 ### Core Documentation
 
+- **[Hardware Datasheet](Main_files/Hardware_Datasheet.md)** - Base vehicle specs (dimensions, payload, speed, battery)
+- **[Integration](Main_files/Integration.md)** - What CRAL adds: compute, sensors, control, networking
 - **[User Manual](Main_files/User_Manual.md)** - Complete guide to operating the Jackal robot
 - **[Tutorials](Main_files/Tutorials.md)** - Step-by-step tutorials for common tasks and operations
-- **[Integration](Main_files/Integration.md)** - Integration guides and best practices
 - **[Maintenance](Main_files/Maintenance.md)** - Maintenance procedures and schedules
 - **[Troubleshooting](Main_files/Troubleshooting.md)** - Common issues and solutions
 
@@ -40,9 +41,9 @@ New to the Jackal robots? Start here:
 
 ## Robot Specifications
 
-- **Platform:** Clearpath Jackal UGV
+- **Platform:** Clearpath Jackal UGV — 508 x 430 x 250 mm, 17 kg, 2.0 m/s max speed (see [Hardware Datasheet](Main_files/Hardware_Datasheet.md))
 - **ROS Version:** ROS 2 Humble
-- **Robots:** Jackal 93, Jackal 96
+- **Robots:** Jackal 93 (J100-0893), Jackal 96 (J100-0896)
 - **Sensors:** ZED Camera, Ouster LiDAR
 
 ## Additional Resources

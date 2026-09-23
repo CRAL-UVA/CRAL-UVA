@@ -8,10 +8,9 @@ Jackal is a rugged, lightweight, fast and easy-to-use unmanned ground robot for 
 You can view all topics that are active using `ros2 topic list`.
 
 ### 1.3 Software Setup 
-[//]: # (TODO: Add PS4 controller setup link)
-- [Install ROS 2](Setup_files/Ros_installation.md)
-- [Sensor drivers](Setup_files/sensor_drivers.md)
-- PS4 Joystick Controller
+- [Install ROS 2](../Setup_files/Ros_installation.md)
+- [Sensor drivers](../Setup_files/sensor_drivers.md)
+- [PS4 Joystick Controller](https://docs.clearpathrobotics.com/docs/ros/installation/controller/) — you may need to restart your computer after connecting the controller
 
 ### 1.4 Using the Robot 
 ### 1.4.1 Running the Autonomy Package
@@ -37,4 +36,10 @@ You can view all topics that are active using `ros2 topic list`.
 
 ### 1.5 Multirobot Setup
 
-### 1.5 Support 
+See [Demo 2: Multi-Robot Setup](../demos/multi_robot_setup.md) for namespace configuration, URDF generation, and the systemd service overrides needed to run multiple Jackals together.
+
+### 1.6 Support
+
+- [Troubleshooting Guide](Troubleshooting.md) for common ROS and Ubuntu issues
+- [CRALAutonomyStack](https://github.com/CRAL-UVA/CRALAutonomyStack) for the per-robot autonomy code
+- Reach out on the lab Slack for anything not covered here 

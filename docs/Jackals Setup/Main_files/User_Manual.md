@@ -36,19 +36,15 @@ Jackal is a rugged, lightweight, fast and easy-to-use unmanned ground robot for 
 ## 3.1 Wireless SSH
 
 - Turn the Jackal on and wait for it to connect to WiFi (you'll see the WiFi light turn on)
--  Connect laptop to "NETGEAR52"
+- Connect laptop to "NETGEAR52"
     SSID: "NETGEAR52"
     Password: "oddbird088"
+- Run `ssh administrator@<robot-ip>`, password: `clearpath`
+    - See [Jackal 93](../robots/jackal_93.md) or [Jackal 96](../robots/jackal_96.md) for that robot's static IP
 
-[//]:# (Add more documentation of each Jackal)
-- Run ssh administrator@192.168.1.2
-     Password: "clearpath"
-     10.10.10.53 is the static IP of the J100-0893 Jackal. 
-    192.168.4.27 is the static IP of the J100-0896 Jackal
+## 4. Ethernet SSH
 
-## 4.Ethernet SSH
-
-Directions for this can be found in the user manual, which should be in the lab
+⚠️ **[VERIFY]** — directions for this can be found in the physical Clearpath user manual kept in the lab; these have not yet been transcribed into this documentation.
 
 ## 5. Connecting to a monitor
 
