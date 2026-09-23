@@ -45,6 +45,9 @@ nav:
   - Robots:
     - Traxxas UDR 01: robots/traxxas_1.md
     - Traxxas UDR 02: robots/traxxas_2.md
+    - Issues: Issues/Issues.md
+    - Maintenance: Main_files/Maintenance.md
+    - Troubleshooting: Main_files/Troubleshooting.md
 
   - Setup:
     - ROS 2:
@@ -59,9 +62,7 @@ nav:
     - Autonomy:
       - Jetson Setup: Autonomy/jetson.md
       - Joystick Setup: Autonomy/Joystick.md
-  - Issues: Issues/Issues.md
-  - Maintenance: Main_files/Maintanence.md
-  - Troubleshooting: Main_files/Troubleshooting.md
+
 
 markdown_extensions:
   - pymdownx.highlight:
